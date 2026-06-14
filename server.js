@@ -41,19 +41,18 @@ app.post("/api/check_license", (req, res) => {
 
     const sql = `
         SELECT
-            c.id,
+            c.customer_id,
             c.email,
             c.phone,
             c.is_active,
             p.name AS plan_name,
-            s.start_date,
             s.end_date,
             s.status AS subscription_status,
             l.license_key
         FROM customers c
-        INNER JOIN licenses l ON l.customer_id = c.id
-        INNER JOIN subscriptions s ON s.customer_id = c.id
-        INNER JOIN plans p ON p.id = s.plan_id
+        INNER JOIN licenses l ON l.customer_id = c.customer_id
+        INNER JOIN subscriptions s ON s.customer_id = c.customer_id
+        INNER JOIN plans p ON p.plan_id = s.plan_id
         WHERE c.email = ?
           AND c.phone = ?
           AND l.license_key = ?
