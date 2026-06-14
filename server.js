@@ -1,9 +1,28 @@
 const express = require("express");
+const mysql = require("mysql2");
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// 🔴 MySQL Connection
+const db = mysql.createConnection({
+    host: "mysql.railway.internal",
+    user: "root",
+    password: "NDQctwbJNjhhdsOIGixDeauAfghVTYAI",
+    database: "railway",
+    port: 3306
+});
+
+db.connect(err => {
+    if (err) {
+        console.log("DB Connection Error:", err);
+    } else {
+        console.log("MySQL Connected ✔");
+    }
+});
+
+// API
 app.post("/api/check_license", (req, res) => {
 
     const email = req.body.email;
@@ -17,7 +36,7 @@ app.post("/api/check_license", (req, res) => {
         });
     }
 
-    // TEMP TEST DATA (هنربطه بقاعدة البيانات بعدين)
+    // TEST (مؤقت لحد ما نربط الداتا)
     if (email === "test@gmail.com" && phone === "0100000000" && license === "TEST-1234-KEY") {
         return res.json({
             status: "VALID",
@@ -33,7 +52,6 @@ app.post("/api/check_license", (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
     console.log("Server running on port " + PORT);
 });
